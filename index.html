@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <!-- Import a nice font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to our custom styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header Section: Title and Score -->
+        <header>
+            <div class="header-left">
+                <button id="headerMenuBtn" class="icon-btn" title="Back to Menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12h18M3 6h18M3 18h18" />
+                    </svg>
+                </button>
+                <h1>Snake</h1>
+            </div>
+            <div class="score-container">
+                <span class="label">Score</span>
+                <span id="score">0</span>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="game-wrapper">
+            <div class="game-board-container">
+                <!-- The Canvas is where the game graphics are drawn -->
+                <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+                <!-- Overlay: Start Screen (visible initially) -->
+                <div id="startScreen" class="overlay">
+                    <div class="overlay-content">
+                        <h2>Snake Game</h2>
+                        <p>Select Difficulty</p>
+                        <div class="difficulty-options">
+                            <button class="difficulty-btn" data-speed="150" data-level="Easy">Easy</button>
+                            <button class="difficulty-btn selected" data-speed="100" data-level="Medium">Medium</button>
+                            <button class="difficulty-btn" data-speed="60" data-level="Expert">Expert</button>
+                        </div>
+                        <button id="startBtn">Start Game</button>
+                    </div>
+                </div>
+
+                <!-- Overlay: Game Over Screen (hidden initially) -->
+                <div id="gameOverScreen" class="overlay hidden">
+                    <div class="overlay-content">
+                        <h2>Game Over</h2>
+                        <p>Score: <span id="finalScore">0</span></p>
+                        <div class="btn-group">
+                            <button id="restartBtn">Play Again</button>
+                            <button id="menuBtn" class="secondary-btn">Main Menu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>MADE BY ANSH PATEL</p>
+        </footer>
+    </div>
+    <!-- Link to our game logic -->
+    <script src="script.js"></script>
+</body>
+
+</html>

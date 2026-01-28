@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at center, #1e1e1e 0%, #000000 100%);
+            --surface-color: #1e1e1e;
+            --accent-color: #3b82f6;
+            /* Blue for a different feel, or keep green? Let's go Blue */
+            --text-color: #ffffff;
+            --font-family: 'Inter', sans-serif;
+            --success-color: #00ff88;
+            --error-color: #ff4757;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #252525;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            font-family: inherit;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #submitBtn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        #submitBtn:hover {
+            background-color: #2563eb;
+        }
+
+        #restartBtn {
+            background-color: var(--success-color);
+            color: black;
+            margin-top: 1rem;
+            width: 100%;
+            display: none;
+            /* Hidden by default */
+        }
+
+        #restartBtn.visible {
+            display: block;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .message-area {
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .message {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .message.error {
+            color: var(--error-color);
+        }
+
+        .message.success {
+            color: var(--success-color);
+        }
+
+        .message.hint {
+            color: #aaa;
+        }
+
+        .history {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+        <h1>Guess the Number</h1>
+        <p class="subtitle">Enter a number between 1 and 100</p>
+
+        <div class="input-group">
+            <input type="number" id="guessInput" min="1" max="100" placeholder="1-100">
+            <button id="submitBtn">Guess</button>
+        </div>
+
+        <div class="message-area">
+            <p id="message" class="message hint">Start guessing!</p>
+        </div>
+
+        <p class="history">Attempts: <span id="attempts">0</span></p>
+
+        <button id="restartBtn">Play Again</button>
+    </div>
+
+    <script>
+        // Game Logic
+        let targetNumber;
+        let attempts = 0;
+        const maxNumber = 100;
+
+        const guessInput = document.getElementById('guessInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const messageEl = document.getElementById('message');
+        const attemptsEl = document.getElementById('attempts');
+
+        function initGame() {
+            targetNumber = Math.floor(Math.random() * maxNumber) + 1;
+            attempts = 0;
+            attemptsEl.textContent = attempts;
+            messageEl.textContent = "Start guessing!";
+            messageEl.className = 'message hint';
+            guessInput.value = '';
+            guessInput.disabled = false;
+            submitBtn.disabled = false;
+            restartBtn.classList.remove('visible');
+            guessInput.focus();
+            console.log("Target Number:", targetNumber); // For debugging
+        }
+
+        function checkGuess() {
+            const userGuess = parseInt(guessInput.value);
+
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                setMessage("Please enter a valid number between 1 and 100", "error");
+                return;
+            }
+
+            attempts++;
+            attemptsEl.textContent = attempts;
+
+            if (userGuess === targetNumber) {
+                setMessage(`🎉 Correct! The number was ${targetNumber}.`, "success");
+                endGame();
+            } else if (userGuess < targetNumber) {
+                setMessage("Too low! Try higher.", "hint");
+                guessInput.value = '';
+                guessInput.focus();
+            } else {
+                setMessage("Too high! Try lower.", "hint");
+                guessInput.value = '';
+                guessInput.focus();
+            }
+        }
+
+        function setMessage(msg, type) {
+            messageEl.textContent = msg;
+            messageEl.className = `message ${type}`;
+        }
+
+        function endGame() {
+            guessInput.disabled = true;
+            submitBtn.disabled = true;
+            restartBtn.classList.add('visible');
+            restartBtn.focus();
+        }
+
+        // Event Listeners
+        submitBtn.addEventListener('click', checkGuess);
+
+        guessInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkGuess();
+        });
+
+        restartBtn.addEventListener('click', initGame);
+
+        // Start
+        initGame();
+    </script>
+</body>
+
+</html>
