@@ -8,6 +8,10 @@ const startScreen = document.getElementById('startScreen');
 const gameOverScreen = document.getElementById('gameOverScreen');
 const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const pauseScreen = document.getElementById('pauseScreen');
+const resumeBtn = document.getElementById('resumeBtn');
+const pauseMenuBtn = document.getElementById('pauseMenuBtn');
 const difficultyBtns = document.querySelectorAll('.difficulty-btn');
 
 // The canvas is 600x600. We grid it into 30x30 tiles.
@@ -28,6 +32,7 @@ let nextDy = 0;
 
 let gameLoopId = null; // Stores the interval ID to stop the loop later
 let isGameRunning = false;
+let isPaused = false;
 let currentSpeed = 100; // Default Medium
 
 // --- Difficulty Handling ---
@@ -71,6 +76,8 @@ function initGame() {
     // 5. Hide the UI overlays
     startScreen.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
+    pauseScreen.classList.add('hidden');
+    isPaused = false;
 }
 
 // --- Game Over Logic ---
@@ -183,6 +190,7 @@ function draw() {
 
 // --- Main Game Loop ---
 function gameLoop() {
+    if (isPaused) return;
     update();
     if (isGameRunning) {
         draw();
@@ -194,6 +202,13 @@ document.addEventListener('keydown', (e) => {
     // Prevent default scrolling for arrow keys
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
         e.preventDefault();
+    }
+
+    // Toggle pause on 'P' or 'Escape'
+    if (e.key.toLowerCase() === 'p' || e.key === 'Escape') {
+        if (isGameRunning && !gameOverScreen.classList.contains('hidden') === false) {
+            togglePause();
+        }
     }
 
     // Set 'next' direction based on key press
@@ -225,18 +240,52 @@ if (document.getElementById('menuBtn')) {
 if (document.getElementById('headerMenuBtn')) {
     document.getElementById('headerMenuBtn').addEventListener('click', () => {
         isGameRunning = false;
+        isPaused = false;
         if (gameLoopId) clearInterval(gameLoopId);
         showMainMenu();
     });
 }
 
+if (pauseBtn) {
+    pauseBtn.addEventListener('click', togglePause);
+}
+
+if (resumeBtn) {
+    resumeBtn.addEventListener('click', resumeGame);
+}
+
+if (pauseMenuBtn) {
+    pauseMenuBtn.addEventListener('click', showMainMenu);
+}
+
 // --- Menu Functions ---
+function togglePause() {
+    if (!isGameRunning) return;
+    if (isPaused) {
+        resumeGame();
+    } else {
+        pauseGame();
+    }
+}
+
+function pauseGame() {
+    isPaused = true;
+    pauseScreen.classList.remove('hidden');
+}
+
+function resumeGame() {
+    isPaused = false;
+    pauseScreen.classList.add('hidden');
+}
+
 function showMainMenu() {
     isGameRunning = false;
+    isPaused = false;
     if (gameLoopId) clearInterval(gameLoopId);
 
-    // Hide Game Over / Game Screens
+    // Hide Overlays
     gameOverScreen.classList.add('hidden');
+    pauseScreen.classList.add('hidden');
 
     // Show Start Screen
     startScreen.classList.remove('hidden');

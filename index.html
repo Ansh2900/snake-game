@@ -24,6 +24,13 @@
                         <path d="M3 12h18M3 6h18M3 18h18" />
                     </svg>
                 </button>
+                <button id="pauseBtn" class="icon-btn" title="Pause Game">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
                 <h1>Snake</h1>
             </div>
             <div class="score-container">
@@ -49,6 +56,17 @@
                             <button class="difficulty-btn" data-speed="60" data-level="Expert">Expert</button>
                         </div>
                         <button id="startBtn">Start Game</button>
+                    </div>
+                </div>
+
+                <!-- Overlay: Pause Screen (hidden initially) -->
+                <div id="pauseScreen" class="overlay hidden">
+                    <div class="overlay-content">
+                        <h2>Paused</h2>
+                        <div class="btn-group">
+                            <button id="resumeBtn">Resume</button>
+                            <button id="pauseMenuBtn" class="secondary-btn">Main Menu</button>
+                        </div>
                     </div>
                 </div>
 

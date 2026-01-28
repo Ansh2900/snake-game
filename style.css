@@ -245,7 +245,8 @@ canvas {
 
 /* --- Main Buttons --- */
 button#startBtn,
-button#restartBtn {
+button#restartBtn,
+button#resumeBtn {
   background: var(--accent-color);
   color: #000;
   border: none;
@@ -297,7 +298,8 @@ button#restartBtn {
 
 /* Hover Effects */
 button#startBtn:hover,
-button#restartBtn:hover {
+button#restartBtn:hover,
+button#resumeBtn:hover {
   transform: translateY(-2px) scale(1.02);
   background: var(--accent-hover);
   box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
